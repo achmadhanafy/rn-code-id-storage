@@ -1,12 +1,27 @@
 import {configureStore} from '@reduxjs/toolkit';
-import {createTransform, persistReducer} from 'redux-persist';
+import {persistReducer, persistStore} from 'redux-persist';
 import createSensitiveStorage from 'redux-persist-sensitive-storage';
 import useEncryption from '../hooks/useEncryption';
-import persistStore from 'redux-persist/es/persistStore';
+import {combineReducers} from 'redux';
+import createTransform from 'redux-persist/es/createTransform';
 
-const encryptor = persistKey =>
-  createTransform(
-    (inboundState, key) => {
+export type PersistKey = string;
+export type Store = object;
+export type OtherMiddleware = any;
+export type WhiteList = string[];
+
+type InitStoreConfig = {
+  persistKey?: PersistKey;
+  store?: Store;
+  otherMiddleware?: OtherMiddleware;
+  whitelist?: WhiteList;
+};
+
+function initStore(config: InitStoreConfig = {}) {
+  const {persistKey, store, otherMiddleware, whitelist} = config;
+
+  const encryptor = createTransform(
+    inboundState => {
       const {encrypt} = useEncryption();
       if (!inboundState) {
         return inboundState;
@@ -16,7 +31,7 @@ const encryptor = persistKey =>
 
       return cryptedText;
     },
-    (outboundState, key) => {
+    outboundState => {
       const {decrypt} = useEncryption();
       if (!outboundState) {
         return outboundState;
@@ -27,32 +42,25 @@ const encryptor = persistKey =>
     },
   );
 
-const storage = createSensitiveStorage({
-  keychainService: 'persistKeychain',
-  sharedPreferencesName: 'persistPrefs',
-});
+  const storage = createSensitiveStorage({
+    keychainService: 'persistKeychain',
+    sharedPreferencesName: 'persistPrefs',
+  });
 
-const persistConfig = persistKey => ({
-  key: 'root',
-  storage: storage,
-  transforms: [encryptor(persistKey)],
-  whitelist: [
-    'theme',
-    'auth',
-    'cart',
-    'user',
-    'guestAddress',
-    'update',
-    'guestGarage',
-    'appleCredential',
-    'pushNotification',
-  ],
-});
+  const persistConfig = {
+    key: 'auth',
+    storage: storage,
+    transforms: [encryptor],
+    whitelist,
+  };
 
-const persistedReducer = persistReducer(persistConfig, reducers);
+  const reducers = combineReducers({
+    ...store,
+  });
 
-const store = otherMiddleware =>
-  configureStore({
+  const persistedReducer = persistReducer(persistConfig, reducers);
+
+  const createStore = configureStore({
     reducer: persistedReducer,
     middleware: getDefaultMiddleware => {
       let middlewares;
@@ -76,3 +84,10 @@ const store = otherMiddleware =>
       return middlewares;
     },
   });
+
+  const persistor = persistStore(createStore);
+
+  return {store: createStore, persistor};
+}
+
+export default initStore;
