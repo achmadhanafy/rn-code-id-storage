@@ -1,7 +1,7 @@
 import React from 'react';
-import {Provider} from './lib/components';
 import Navigator from '@code-navigation/Navigator';
 import store from '@code-store/index';
+import {Provider} from 'rn-codeid-storage';
 
 function App() {
   return (

@@ -1,6 +1,6 @@
 import {setAuth} from '@code-module-auth/redux/action';
 import {useCallback, useState} from 'react';
-import {useDispatch} from 'react-redux';
+import {useDispatch} from 'rn-codeid-storage';
 
 function useAuthLogin() {
   const dispatch = useDispatch();
