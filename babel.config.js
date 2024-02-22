@@ -11,6 +11,7 @@ module.exports = {
           '@code-components': './src/components',
           '@code-navigation': './src/navigation',
           '@code-store': './src/store',
+          '@code-api': './src/api',
         },
       },
     ],

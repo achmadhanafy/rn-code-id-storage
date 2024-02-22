@@ -13,7 +13,8 @@
       "@code-module-auth/*": ["src/module/auth/*"],
       "@code-components/*": ["src/components/*"],
       "@code-navigation/*": ["src/navigation/*"],
-      "@code-store/*": ["src/store/*"]
+      "@code-store/*": ["src/store/*"],
+      "@code-api/*": ["src/api/*"]
     },
     "noEmit": true,
     "resolveJsonModule": true,
