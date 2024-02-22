@@ -3,6 +3,7 @@ import {Button, Text, TextInput, View, useWindowDimensions} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import useAuthLogin from './useAuthLogin';
 import {Input} from '@code-components/generic';
+import {useGetTodosQuery} from '@code-module-auth/api/todo';
 
 function AuthLogin() {
   const {height} = useWindowDimensions();
@@ -11,6 +12,11 @@ function AuthLogin() {
     onFormChange,
     onSubmit,
   } = useAuthLogin();
+
+  const {data} = useGetTodosQuery();
+
+  console.log(data);
+
   return (
     <SafeAreaView>
       <View
