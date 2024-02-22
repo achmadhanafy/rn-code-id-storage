@@ -8,12 +8,19 @@ Node 14 or higher. Make sure you don't have any installation package below to pr
 - redux-persist
 - redux-persist-sensitive-storage
 - @reduxjs/toolkit
-- react-native-sensitive-info
-- react-native-flipper
 
 We already included above package in library dependecies, so it will automaticaly installed with supported version.
 
 ## Installation
+
+First you must have dependencies with supported version
+"react-native-sensitive-info": "^5.5.8",
+"react-native-flipper": "^0.212.0"
+or install first
+
+```
+yarn add react-native-sensitive-info@^5.5.8 react-native-flipper@^0.212.0
+```
 
 Installation command
 
